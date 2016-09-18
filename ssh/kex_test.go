@@ -12,6 +12,13 @@ import (
 	"testing"
 )
 
+func TestDHGroupMaximumBits(t *testing.T) {
+	// Ensure that dhGroupMaximumBits <= dhGroup18.bits()
+	if dhGroupMaximumBits > dhGroup18.bits() {
+		t.Errorf("dhGroupMaximumBits > dhGroup18.bits(), which means chooseDHGroup may panic")
+	}
+}
+
 func TestKexes(t *testing.T) {
 	type kexResultErr struct {
 		result *kexResult
@@ -19,6 +26,7 @@ func TestKexes(t *testing.T) {
 	}
 
 	for name, kex := range kexAlgoMap {
+		t.Logf("testing %s", name)
 		a, b := memPipe()
 
 		s := make(chan kexResultErr, 1)
